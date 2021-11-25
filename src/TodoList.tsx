@@ -17,7 +17,7 @@ const TodoList: FC<Props> = ({ initialTodos }) => {
         sortedTodos.sort((a, b) => b.priority - a.priority);
         return (
             sortedTodos.map(todo => (
-                <TodoItem title={todo.title} handleDelete={deleteTodo} id={todo.id}/>
+                <TodoItem key={todo.id} title={todo.title} handleDelete={deleteTodo} id={todo.id}/>
             ))
         )
     }
