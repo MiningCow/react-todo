@@ -8,15 +8,23 @@ const TodoList: FC<Props> = ({ initialTodos }) => {
     // const [todos, setTodos] = useState(initialTodos);
     const [todos, setTodos] = useState<todoItem[]>(initialTodos);
 
-    const deleteTodo = (title: string) => {
-        setTodos(todos.filter(todo => todo.title !== title));
+    const deleteTodo = (id: string) => {
+        setTodos(todos.filter(todo => todo.id !== id));
+    }
+
+    const sortedTodos = () => {
+        const sortedTodos = [...todos];
+        sortedTodos.sort((a, b) => b.priority - a.priority);
+        return (
+            sortedTodos.map(todo => (
+                <TodoItem title={todo.title} handleDelete={deleteTodo} id={todo.id}/>
+            ))
+        )
     }
 
     return (
         <ul>
-            {todos.map(todo => (
-                <TodoItem title={todo.title} handleDelete={deleteTodo}/>
-            ))}
+            {sortedTodos()}
         </ul>
     )
 }
