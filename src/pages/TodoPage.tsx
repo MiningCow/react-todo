@@ -1,41 +1,35 @@
-import { useState, FC } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { useState, FC, useEffect } from "react";
+import initialTodos from "../mock/initialTodos";
 import TodoList from "../components/TodoList";
-import { initialTodos } from "../mock/initialTodos";
 import TodoItemType from "../types/TodoItemType";
+import { Link, Navigate } from "react-router-dom";
 
 const TodoPage: FC = () => {
-  const [todos, setTodos] = useState<TodoItemType[]>(initialTodos);
-  const [title, setTitle] = useState("");
-  const [priority, setPriority] = useState<number>(0);
+  const [todos, setTodos] = useState<Record<string, TodoItemType>>(initialTodos);
+  console.log(initialTodos);
 
-  const createTodo = () => {
-    if (title) {
-      setTodos([...todos, { title: title, priority: priority, id: uuidv4()}])
-      setTitle("");
-      setPriority(0);
-    } else {
-      alert("Todo title cannot be empty");
+  useEffect(() => {
+    if (localStorage.getItem("todos")) {
+      const todosFromStorage = JSON.parse(localStorage.getItem("todos") || JSON.stringify(initialTodos));
+      setTodos(todosFromStorage);
     }
-  }
+  }, []);
 
   const deleteTodo = (id: string) => {
-      setTodos(todos.filter(todo => todo.id !== id));
+    const allTodos = Object.values(todos);
+    const newTodos = allTodos.reduce((acc: Record<string, TodoItemType>, todo) => {
+      if (todo.id !== id) {
+        acc[todo.id] = todo
+      }
+      return acc
+    }, {});
+    setTodos(newTodos);
+    localStorage.setItem("todos", JSON.stringify(newTodos));
   }
 
   return (
     <>
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <input
-        type="number"
-        value={priority}
-        onChange={(e) => setPriority(Number(e.target.value))}
-      />
-      <button onClick={() => createTodo()}>+</button>
+      <Link to="/todos/new-todo">create todo</Link>
       <TodoList todos={todos} deleteTodo={deleteTodo} />
     </>
   );

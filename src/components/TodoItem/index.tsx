@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 
 interface Props {
     id: string;
@@ -8,12 +9,14 @@ interface Props {
 
 const TodoItem: FC<Props> = ({ id, title, handleDelete }) => {
 
-    return (
-        <li>
-            {title}
-            <button onClick={() => handleDelete(id)}>Delete</button>
-        </li>
-    )
+  return (
+    <li>
+      <Link to={id}>
+        {title}
+      </Link>
+      <button onClick={() => handleDelete(id)}>Delete</button>
+    </li>
+  )
 }
 
 export default TodoItem

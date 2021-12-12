@@ -6,14 +6,16 @@ import {
   Navigate
 } from "react-router-dom";
 import TodoPage from "./pages/TodoPage";
+import TodoForm from "./pages/TodoForm";
 import "./App.css";
 
 const App: FC = () => {
   return (
     <Router>
 			<Routes>
-				<Route path="/" element={<Navigate replace to="/todo" />} />
-				<Route path="/todo" element={<TodoPage />} />
+				<Route path="/" element={<Navigate replace to="/todos" />} />
+				<Route path="/todos" element={<TodoPage />} />
+				<Route path="/todos/:todoId" element={<TodoForm />} />
 			</Routes>
     </Router>
   );
