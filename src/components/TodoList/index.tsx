@@ -1,26 +1,27 @@
 import { FC } from "react";
 import TodoItem from "../TodoItem";
-import TodoItemType from "../../types/TodoItemType";
+import { useSelector } from "react-redux"
+import { RootState } from "../../redux/store";
 
-interface Props { todos: TodoItemType[], deleteTodo: (title: string) => void; }
+const TodoList: FC = () => {
+  const todos = useSelector((state: RootState) => state.todos);
+  console.log(todos);
 
-const TodoList: FC<Props> = ({ todos, deleteTodo }) => {
-
-    const sortedTodos = () => {
-        const sortedTodos = [...todos];
-        sortedTodos.sort((a, b) => b.priority - a.priority);
-        return (
-            sortedTodos.map(todo => (
-                <TodoItem key={todo.id} title={todo.title} handleDelete={deleteTodo} id={todo.id}/>
-            ))
-        )   
-    }
-
+  const sortedTodos = () => {
+    const sortedTodos = Object.values(todos);
+    sortedTodos.sort((a, b) => b.priority - a.priority);
     return (
-        <ul>
-            {sortedTodos()}
-        </ul>
+      sortedTodos.map(todo => (
+        <TodoItem key={todo.id} title={todo.title} id={todo.id} />
+      ))
     )
+  }
+
+  return (
+    <ul>
+      {sortedTodos()}
+    </ul>
+  )
 }
 
 export default TodoList

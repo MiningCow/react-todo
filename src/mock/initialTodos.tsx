@@ -1,10 +1,14 @@
 import TodoItemType from "../types/TodoItemType"
 import { v4 as uuidv4 } from 'uuid';
 
-export const initialTodos : TodoItemType[] = [
-    { title: "Create a todo list", priority: 10, id: uuidv4() },
-    { title: "Priority test 3", priority: 3, id: uuidv4() },
-    { title: "Priority test 4", priority: 4, id: uuidv4() },
-    { title: "Priority test 1", priority: 1, id: uuidv4() },
-    { title: "Don't procrastinate", priority: 11, id: uuidv4() }
-];
+const todoTitles = ["title1", "title2", "title3", "title4", "title5"];
+
+const initialTodos = todoTitles.reduce((acc: Record<string, TodoItemType>, title, index) => {
+  const todoId = uuidv4();
+  if (!acc[todoId]) {
+    acc[todoId] = {title: title, priority: index+1, id: todoId};
+  }
+  return acc
+}, {});
+
+export default initialTodos;
