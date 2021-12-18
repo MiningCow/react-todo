@@ -1,20 +1,22 @@
-import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { FC } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { deleteTodo } from "../../redux/todoSlice";
 
 interface Props {
     id: string;
     title: string;
-    handleDelete: (title: string) => void;
 }
 
-const TodoItem: FC<Props> = ({ id, title, handleDelete }) => {
+const TodoItem: FC<Props> = ({ id, title }) => {
+  const dispatch = useDispatch();
 
   return (
     <li>
       <Link to={id}>
         {title}
       </Link>
-      <button onClick={() => handleDelete(id)}>Delete</button>
+      <button onClick={() => dispatch(deleteTodo(id))}>Delete</button>
     </li>
   )
 }

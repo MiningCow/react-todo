@@ -1,39 +1,39 @@
-import { useEffect, useState, FC } from "react";
+import { useState, useEffect, FC } from "react";
 import { useParams } from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
-import TodoItemType from "../types/TodoItemType";
+import { useSelector, useDispatch } from "react-redux"
+import { v4 as uuidv4 } from 'uuid';
+import { RootState } from "../redux/store";
+import { createTodo } from "../redux/todoSlice";
 
 const TodoForm: FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const todos = useSelector((state: RootState) => state.todos);
+
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState<number>(0);
   const { todoId } = useParams();
 
   useEffect(() => {
-    const todosFromStorage = JSON.parse(localStorage.getItem("todos") || "");
-    console.log(todosFromStorage);
     if (todoId && todoId !== "new-todo") {
-      const todo = todosFromStorage[todoId];
+      const todo = todos[todoId];
       console.log(todo);
       setTitle(todo.title);
       setPriority(todo.priority);
     }
   }, []);
-
+  
   const handleSubmit = () => {
     if (!todoId) return
-    const oldTodos = JSON.parse(localStorage.getItem("todos") || "[]");
+
     let newTodoId;
     if (todoId === "new-todo") {
       newTodoId = uuidv4();
-    } else {
-      if (oldTodos[todoId]) {
-        newTodoId = todoId;
-      } else console.log("Couldn't find todo with id " + todoId);
-    }
-    const newTodos = {...oldTodos, [newTodoId as string]: {title: title, priority: priority, id: newTodoId}};
-    localStorage.setItem("todos", JSON.stringify(newTodos));
+    } else if (todos[todoId]) {
+      newTodoId = todoId;
+    } else console.log("Couldn't find todo with id " + todoId);
+    if (newTodoId) dispatch(createTodo({title: title, priority: priority, id: newTodoId}));
     navigate("/todos");
   }
 
